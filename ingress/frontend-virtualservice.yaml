@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend-ingress
+  namespace: onlineboutique
+spec:
+  hosts:
+    - frontend.endpoints.phx-01h57q8t23amkhpscfjenrp9y2.cloud.goog
+  gateways:
+  - asm-ingress/asm-ingressgateway
+  http:
+  - route:
+    - destination:
+        host: frontend
+        port:
+          number: 80

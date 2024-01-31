@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+    name: asm-ingressgateway
+    namespace: asm-ingress
+spec:
+  selector:
+    asm: ingressgateway
+  servers:
+    - port:
+        number: 8443
+        name: https
+        protocol: HTTPS
+      hosts:
+      # must use the wildcard * entry in the hosts field in the Gateway.
+      # GCLB doesn't use SNI extension to the backends. Using the wildcard 
+      # entry sends the encrypted packet (from GCLB) to the ASM ingress gateway.
+      # Header (in the decrypted packet) to make routing decisions (based on VirtualService entries).
+      # The ASM Ingress gateway decrypts the packet and uses the HTTP Host 
+        - "*"
+      tls:
+        mode: PASSTHROUGH
+        # credentialName: httpbin-credential

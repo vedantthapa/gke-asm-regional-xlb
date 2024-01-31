@@ -1,0 +1,42 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-cluster-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: xlb-cert
+  namespace: asm-ingress
+spec:
+  dnsNames:
+    - frontend.endpoints.phx-01h57q8t23amkhpscfjenrp9y2.cloud.goog
+  issuerRef:
+    kind: ClusterIssuer
+    # name: letsencrypt-staging
+    name: selfsigned-cluster-issuer
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  secretName: xlb-tlskeys
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mesh-cert
+  namespace: asm-ingress
+spec:
+  dnsNames:
+    - frontend.endpoints.phx-01h57q8t23amkhpscfjenrp9y2.cloud.goog
+  issuerRef:
+    kind: ClusterIssuer
+    # name: letsencrypt-staging
+    name: selfsigned-cluster-issuer
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  secretName: mesh-tlskeys

@@ -1,0 +1,69 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: istio-gateway
+  namespace: asm-ingress
+  annotations:
+    networking.istio.io/service-type: ClusterIP
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+      namespaces:
+        from: All
+    hostname: "httpbin.example.com"
+  - name: https
+    protocol: HTTPS
+    port: 443
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+      namespaces:
+        from: All
+    tls:
+      mode: Passthrough
+      # certificateRefs:
+      #   - kind: Secret
+      #     group: ""
+      #     name: httpbin-credential
+    hostname: "httpbin.example.com"
+---
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: mesh-health-check
+  namespace: asm-ingress
+spec:
+  default:
+    logConfig:
+      enabled: true
+    config:
+      type: HTTP
+      httpHealthCheck:
+        requestPath: /healthz/ready
+        port: 15021
+  targetRef:
+    group: ""
+    kind: Service
+    name: istio-gateway-istio
+# ---
+# apiVersion: gateway.networking.k8s.io/v1beta1
+# kind: HTTPRoute
+# metadata:
+#   name: mesh-http-filter-redirect
+#   namespace: asm-ingress
+# spec:
+#   parentRefs:
+#   - name: istio-gateway
+#     namespace: asm-ingress
+#     sectionName: http
+#   rules:
+#   - filters:
+#     - type: RequestRedirect
+#       requestRedirect:
+#         scheme: https

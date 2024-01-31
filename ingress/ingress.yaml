@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: asm-ingressgateway
+  namespace: asm-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ingress-ip
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+  - hosts:
+      - frontend.endpoints.phx-01h57q8t23amkhpscfjenrp9y2.cloud.goog
+    secretName: tlskeys 
+  defaultBackend:
+    service:
+      name: istio-gateway-istio
+      port:
+        number: 443
