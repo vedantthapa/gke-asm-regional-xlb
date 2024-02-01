@@ -27,3 +27,6 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: httpbin-credential
+        privateKey: sds
+        serverCertificate: sds
+        minProtocolVersion: TLSV1_3
