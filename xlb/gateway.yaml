@@ -1,3 +1,4 @@
+# Regional XLB configuration
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
@@ -32,6 +33,7 @@ spec:
   - type: NamedAddress
     value: gateway-ip
 ---
+# HTTP -> HTTPS redirect. See https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/#http-to-https-redirects
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
@@ -48,6 +50,7 @@ spec:
       requestRedirect:
         scheme: https
 ---
+# Route traffic from edge to mesh
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
@@ -65,26 +68,3 @@ spec:
       - name: asm-ingressgateway
         port: 8080
 ---
-# apiVersion: gateway.networking.k8s.io/v1beta1
-# kind: HTTPRoute
-# metadata:
-#   name: edge2httpbin
-#   namespace: onlineboutique
-# spec:
-#   parentRefs:
-#   - name: xlb-gateway
-#     namespace: istio-system
-#     sectionName: edge-https
-#   hostnames: ["httpbin.example.com"]
-#   rules:
-#   - matches:
-#     - path:
-#         type: PathPrefix
-#         value: /status
-#     - path:
-#         type: PathPrefix
-#         value: /delay
-#     backendRefs:
-#     - name: httpbin
-#       port: 8000
-# ---
