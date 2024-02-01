@@ -1,3 +1,4 @@
+# https://cloud.google.com/architecture/exposing-service-mesh-apps-through-gke-ingress/deployment#install_an_ingress_gateway
 apiVersion: apps/v1
 kind: Deployment
 metadata:

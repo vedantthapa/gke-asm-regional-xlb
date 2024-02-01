@@ -1,3 +1,19 @@
+# https://cloud.google.com/architecture/exposing-service-mesh-apps-through-gke-ingress/deployment#apply_backend_service_settings
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ingress-backendconfig
+  namespace: asm-ingress
+spec:
+  healthCheck:
+    requestPath: /healthz/ready
+    port: 15021
+    type: HTTP
+  # iap:
+  #   enabled: true
+  #   oauthclientCredentials:
+  #     secretName: iap-oauth-secret
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,19 +42,3 @@ spec:
   selector:
     asm: ingressgateway
   type: ClusterIP
----
-apiVersion: cloud.google.com/v1
-kind: BackendConfig
-metadata:
-  name: ingress-backendconfig
-  namespace: asm-ingress
-spec:
-  healthCheck:
-    requestPath: /healthz/ready
-    port: 15021
-    type: HTTP
-  # iap:
-  #   enabled: true
-  #   oauthclientCredentials:
-  #     secretName: iap-oauth-secret
-
