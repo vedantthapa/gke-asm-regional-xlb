@@ -8,6 +8,12 @@ spec:
     asm: ingressgateway
   servers:
     - port:
+        number: 8080
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+    - port:
         number: 8443
         name: https
         protocol: HTTPS
@@ -20,4 +26,4 @@ spec:
         - "*"
       tls:
         mode: PASSTHROUGH
-        # credentialName: httpbin-credential
+        credentialName: httpbin-credential

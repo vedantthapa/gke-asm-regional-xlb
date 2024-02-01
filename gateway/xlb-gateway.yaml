@@ -63,7 +63,7 @@ spec:
   rules:
     - backendRefs:
       - name: asm-ingressgateway
-        port: 8443
+        port: 8080
 ---
 # apiVersion: gateway.networking.k8s.io/v1beta1
 # kind: HTTPRoute
