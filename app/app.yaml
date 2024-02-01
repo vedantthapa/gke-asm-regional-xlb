@@ -19,7 +19,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: httpbin
-  namespace: onlineboutique
+  namespace: httpbin
 ---
 apiVersion: v1
 kind: Service
@@ -28,7 +28,7 @@ metadata:
   labels:
     app: httpbin
     service: httpbin
-  namespace: onlineboutique
+  namespace: httpbin
 spec:
   ports:
   - name: http
@@ -41,7 +41,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: httpbin
-  namespace: onlineboutique
+  namespace: httpbin
 spec:
   replicas: 1
   selector:

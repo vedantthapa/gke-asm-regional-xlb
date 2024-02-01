@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   creationTimestamp: null
-  name: onlineboutique
+  name: httpbin
   labels:
     istio-injection: enabled
 spec: {}

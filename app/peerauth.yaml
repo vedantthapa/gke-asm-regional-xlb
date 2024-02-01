@@ -2,7 +2,7 @@ apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
   name: httpbin
-  namespace: onlineboutique
+  namespace: httpbin
 spec:
   mtls:
     mode: STRICT
