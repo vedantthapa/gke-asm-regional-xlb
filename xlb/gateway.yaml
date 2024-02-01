@@ -66,5 +66,5 @@ spec:
   rules:
     - backendRefs:
       - name: asm-ingressgateway
-        port: 8080
+        port: 80
 ---

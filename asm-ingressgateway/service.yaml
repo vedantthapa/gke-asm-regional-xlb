@@ -22,7 +22,6 @@ metadata:
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
     cloud.google.com/backend-config: '{"default": "ingress-backendconfig"}'
-    cloud.google.com/app-protocols: '{"https":"HTTP2"}' # HTTP/2 with TLS encryption
   labels:
     asm: ingressgateway
 spec:
@@ -34,11 +33,12 @@ spec:
     targetPort: 15021
   # Any ports exposed in Gateway resources should be exposed here.
   - name: http2
-    port: 8080
+    port: 80
     targetPort: 8080
   - name: https
     port: 8443
     targetPort: 8443
+    appProtocol: HTTPS
   selector:
     asm: ingressgateway
   type: ClusterIP

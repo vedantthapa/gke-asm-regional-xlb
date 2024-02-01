@@ -8,7 +8,7 @@ spec:
     asm: ingressgateway
   servers:
     - port:
-        number: 8080
+        number: 80
         name: http
         protocol: HTTP
       hosts:
@@ -25,5 +25,5 @@ spec:
       # The ASM Ingress gateway decrypts the packet and uses the HTTP Host 
         - "*"
       tls:
-        mode: PASSTHROUGH
+        mode: SIMPLE
         credentialName: httpbin-credential
