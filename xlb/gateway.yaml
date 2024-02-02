@@ -68,3 +68,20 @@ spec:
       - name: asm-ingressgateway
         port: 8443
 ---
+# IAP Config
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: backend-policy
+  namespace: asm-ingress
+spec:
+  default:
+    iap:
+      enabled: true
+      oauth2ClientSecret:
+        name: iap-oauth
+      clientID: 231342808979-9nhpoah994sag3qmtgje203a04eqlqt9.apps.googleusercontent.com
+  targetRef:
+    group: ""
+    kind: Service
+    name: asm-ingressgateway
