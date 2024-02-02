@@ -72,7 +72,7 @@ spec:
 apiVersion: networking.gke.io/v1
 kind: GCPBackendPolicy
 metadata:
-  name: backend-policy
+  name: asm-ingressgateway
   namespace: asm-ingress
 spec:
   default:
@@ -81,6 +81,25 @@ spec:
       oauth2ClientSecret:
         name: iap-oauth
       clientID: 231342808979-9nhpoah994sag3qmtgje203a04eqlqt9.apps.googleusercontent.com
+  targetRef:
+    group: ""
+    kind: Service
+    name: asm-ingressgateway
+---
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: asm-ingressgateway
+  namespace: asm-ingress
+spec:
+  default:
+    logConfig:
+      enabled: true
+    config:
+      type: HTTP
+      httpHealthCheck:
+        requestPath: /healthz/ready
+        port: 15021
   targetRef:
     group: ""
     kind: Service
