@@ -20,6 +20,8 @@ Based on the configuration, the current traffic flow is `Client --HTTPS --> GCP 
 
 IAP is configured via a `GCPBackendPolicy` as documented [here](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources#configure_iap).
 
+> TODO: setup instructions
+
 # Alternatives
 
 [GKE Gateway also has support for ASM](https://cloud.google.com/service-mesh/docs/managed/service-mesh-cloud-gateway#preview_limitations), however, there are limitations with that approach mainly due to the fact that it's still in experimentation, autopilot clusters are not supported and it uses a Global XLB.
