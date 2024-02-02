@@ -12,17 +12,15 @@ At a minimum, all solutions being considered will provide a language and framewo
 
 IAP requires an HTTPS LB whereas the default implementation of ingressgateway, i.e, K8s service type of `LoadBalancer` provisions a Network Passthrough LB which doesn't have that capability.
 
-The alternative then is to change the service to `ClusterIP` and provision an HTTPS LB in front of the service mesh gateway as described [in this architecture](https://cloud.google.com/architecture/exposing-service-mesh-apps-through-gke-ingress#cloud_ingress_and_mesh_ingress). However, note that the implementation uses a Global XLB managed by an `Ingress` object in K8s, which, is an issue for us due to compliance reasons.
+The alternative then is to change the service to `ClusterIP` and provision a HTTPS XLB in front of the service mesh gateway as described [in this architecture](https://cloud.google.com/architecture/exposing-service-mesh-apps-through-gke-ingress#cloud_ingress_and_mesh_ingress). However, note that the implementation uses a Global XLB managed by an `Ingress` object in K8s, which, is an issue for us due to compliance reasons. Moreover, it looks like the `Ingress` object only works with Global XLB.
 
-We, therefore, resort to using the Gateway API in GKE because the `GatewayClass` has [support for a Regional XLB](https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api#gatewayclass). See `xlb/` for full configurations.
+We, therefore, resort to using the [Gateway API in GKE](https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api) because it's `GatewayClass` resource has [support for a Regional XLB](https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api#gatewayclass). See `xlb/` for full spec. Based on this, the current traffic flow is `Client --HTTPS --> GCP Gateway(Regional XLB) --HTTPS ---> Istio GW --HTTP + Istio mTLS ---> Sidecar --HTTP -->App`.
 
-Based on the configuration, the current traffic flow is `Client --HTTPS --> GCP Gateway(Regional XLB) --HTTPS ---> Istio GW --HTTP + Istio mTLS ---> Sidecar --HTTP -->App`.
-
-IAP is configured via a `GCPBackendPolicy` as documented [here](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources#configure_iap).
+IAP is then configured via a `GCPBackendPolicy` attached to the ASM's ingressgateway service as documented [here](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources#configure_iap).
 
 > TODO: setup instructions
 
-# Alternatives
+## Alternatives
 
 [GKE Gateway also has support for ASM](https://cloud.google.com/service-mesh/docs/managed/service-mesh-cloud-gateway#preview_limitations), however, there are limitations with that approach mainly due to the fact that it's still in experimentation, autopilot clusters are not supported and it uses a Global XLB.
 
@@ -33,3 +31,4 @@ https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
 https://cloud.google.com/architecture/exposing-service-mesh-apps-through-gke-ingress
 https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api#gatewayclass
 https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources
+https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/
