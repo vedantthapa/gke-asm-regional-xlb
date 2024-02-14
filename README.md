@@ -48,6 +48,11 @@ kubectl create -n asm-ingress secret tls httpbin-credential \
   --cert=example_certs1/httpbin.example.com.crt
 ```
 
+[Configure IAP](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources#configure_iap) and create a k8s secret for OAuth client secret:
+```sh
+kubectl create secret generic iap-oauth -n asm-ingress --from-literal=key=<CLIENT-SECRET>
+```
+
 Apply the manifests with:
 ```sh
 kustomize build app/ | kubectl apply -f -
