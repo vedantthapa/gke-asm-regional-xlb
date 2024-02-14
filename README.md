@@ -24,7 +24,7 @@ Provision Anthos Service Mesh as directed [here](https://cloud.google.com/servic
 
 Provision a regional static external IP address with:
 ```sh
-gcloud compute addresses create gateway-ip --project=phx-01h57q8t23amkhpscfjenrp9y2 --network-tier=STANDARD --region=northamerica-northeast1
+gcloud compute addresses create gateway-ip --project=${PROJECT_ID} --network-tier=STANDARD --region=northamerica-northeast1
 ```
 
 Create certificates with:
