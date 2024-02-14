@@ -37,10 +37,12 @@ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example In
 openssl req -out example_certs1/httpbin.example.com.csr -newkey rsa:2048 -nodes -keyout example_certs1/httpbin.example.com.key -subj "/CN=httpbin.example.com/O=httpbin organization"
 openssl x509 -req -sha256 -days 365 -CA example_certs1/example.com.crt -CAkey example_certs1/example.com.key -set_serial 0 -in example_certs1/httpbin.example.com.csr -out example_certs1/httpbin.example.com.crt
 
+# Create secret for xlb gateway
 kubectl create -n istio-system secret tls httpbin-credential \
   --key=example_certs1/httpbin.example.com.key \
   --cert=example_certs1/httpbin.example.com.crt
 
+# Create secret for mesh gateway
 kubectl create -n asm-ingress secret tls httpbin-credential \
   --key=example_certs1/httpbin.example.com.key \
   --cert=example_certs1/httpbin.example.com.crt
