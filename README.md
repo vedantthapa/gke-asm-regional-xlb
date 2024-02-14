@@ -71,7 +71,11 @@ Wait for resources to be ready. Once done, run the following command to see the 
 ```
 curl -v -HHost:httpbin.example.com --resolve "httpbin.example.com:$SECURE_INGRESS_PORT:$INGRESS_HOST" \
   --cacert example_certs1/example.com.crt "https://httpbin.example.com:$SECURE_INGRESS_PORT/status/418"
+```
 
+Assign permissions for a user with:
+```
+gcloud beta iap web add-iam-policy-binding --member=user:<USER-EMAIL> --role=roles/iap.httpsResourceAccessor
 ```
 
 ## Alternatives
