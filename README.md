@@ -31,7 +31,7 @@ Create certificates with:
 ```
 # Create a root certificate and private key to sign the certificates for your services:
 mkdir example_certs1
-openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout example_certs1/example.com.key -out example_certs1/example.com.crt
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example Inc./CN=*.example.com' -keyout example_certs1/example.com.key -out example_certs1/example.com.crt
 
 # Generate a certificate and a private key for httpbin.example.com:
 openssl req -out example_certs1/httpbin.example.com.csr -newkey rsa:2048 -nodes -keyout example_certs1/httpbin.example.com.key -subj "/CN=httpbin.example.com/O=httpbin organization"
