@@ -18,7 +18,54 @@ We, therefore, resort to using the [Gateway API in GKE](https://cloud.google.com
 
 IAP is then configured via a `GCPBackendPolicy` attached to the ASM's ingressgateway service as documented [here](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources#configure_iap).
 
-> TODO: setup instructions
+### Setup
+
+Provision Anthos Service Mesh as directed [here](https://cloud.google.com/service-mesh/docs/managed/provision-managed-anthos-service-mesh).
+
+Provision a regional static external IP address with:
+```sh
+gcloud compute addresses create gateway-ip --project=phx-01h57q8t23amkhpscfjenrp9y2 --network-tier=STANDARD --region=northamerica-northeast1
+```
+
+Create certificates with:
+```
+# Create a root certificate and private key to sign the certificates for your services:
+mkdir example_certs1
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout example_certs1/example.com.key -out example_certs1/example.com.crt
+
+# Generate a certificate and a private key for httpbin.example.com:
+openssl req -out example_certs1/httpbin.example.com.csr -newkey rsa:2048 -nodes -keyout example_certs1/httpbin.example.com.key -subj "/CN=httpbin.example.com/O=httpbin organization"
+openssl x509 -req -sha256 -days 365 -CA example_certs1/example.com.crt -CAkey example_certs1/example.com.key -set_serial 0 -in example_certs1/httpbin.example.com.csr -out example_certs1/httpbin.example.com.crt
+
+kubectl create -n istio-system secret tls httpbin-credential \
+  --key=example_certs1/httpbin.example.com.key \
+  --cert=example_certs1/httpbin.example.com.crt
+
+kubectl create -n asm-ingress secret tls httpbin-credential \
+  --key=example_certs1/httpbin.example.com.key \
+  --cert=example_certs1/httpbin.example.com.crt
+```
+
+Apply the manifests with:
+```sh
+kustomize build app/ | kubectl apply -f -
+kustomize build asm-ingressgateway/ | kubectl apply -f -
+kustomize build xlb/ | kubectl apply -f -
+```
+
+Get the gateway address and port from the Gateway resource:
+```
+kubectl wait --for=condition=programmed gtw xlb-gateway -n istio-system
+export INGRESS_HOST=$(kubectl get gtw xlb-gateway -n istio-system -o jsonpath='{.status.addresses[0].value}')
+export SECURE_INGRESS_PORT=$(kubectl get gtw xlb-gateway -n istio-system -o jsonpath='{.spec.listeners[?(@.name=="https")].port}')
+```
+
+Wait for resources to be ready. Once done, run the following command to see the output:
+```
+curl -v -HHost:httpbin.example.com --resolve "httpbin.example.com:$SECURE_INGRESS_PORT:$INGRESS_HOST" \
+  --cacert example_certs1/example.com.crt "https://httpbin.example.com:$SECURE_INGRESS_PORT/status/418"
+
+```
 
 ## Alternatives
 
